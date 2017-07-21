@@ -38,7 +38,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
                 + ProductEntry.COLUMN_PRODUCT_NAME + " TEXT, "
                 + ProductEntry.COLUMN_PRODUCT_PRICE + " TEXT NOT NULL DEFAULT 0, "
                 + ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER DEFAULT 0, "
-                + ProductEntry.COLUMN_PRODUCT_PICTURE + " TEXT NOT NULL);";
+                + ProductEntry.COLUMN_PRODUCT_PICTURE + " INTEGER NOT NULL);";
         db.execSQL(SQL_CREATE_PETS_TABLE);
     }
 

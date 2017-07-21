@@ -3,6 +3,7 @@ package com.example.android.product;
 /**
  * Created by l4z on 16.07.2017.
  */
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,10 +14,16 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.product.data.ProductContract;
 
 public class ProductCursorAdapter extends CursorAdapter {
+
+    private ImageView mImageView;
+    private CatalogActivity catalogActivity;
+
+    int mQuantity;
 
     /**
      * Constructs a new {@link ProductCursorAdapter}.
@@ -54,11 +61,13 @@ public class ProductCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
+
+        mImageView = (ImageView) view.findViewById(R.id.image_view_buy);
         // Find individual views that we want to modify in the list item layout
         TextView nameTextView = (TextView) view.findViewById(R.id.name);
         TextView priceTextView = (TextView) view.findViewById(R.id.text_view_price);
-        TextView quantityTextView = (TextView)view.findViewById(R.id.text_view_quantity);
+       final TextView quantityTextView = (TextView) view.findViewById(R.id.text_view_quantity);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_list);
 
         // Find the columns of product attributes that we're interested in
@@ -70,19 +79,37 @@ public class ProductCursorAdapter extends CursorAdapter {
         // Read the product attributes from the Cursor for the current product
         String productName = cursor.getString(nameColumnIndex);
         String productPrice = cursor.getString(priceColumnIndex);
-        String quantityPrice = cursor.getString(quantityColumnIndex);
-        String productImage = cursor.getString(imageColumnIndex);
-        Uri imageUri = Uri.parse(productImage);
-        // If the product breed is empty string or null, then use some default text
-        // that says "Unknown breed", so the TextView isn't blank.
+        String quantity = cursor.getString(quantityColumnIndex);
+
+        mQuantity = Integer.parseInt(quantity);
+
+        if (!cursor.isNull(imageColumnIndex)) {
+            Integer productImage = cursor.getInt(imageColumnIndex);
+            imageView.setImageResource(productImage);
+        }
+        // If the product price is empty string or null, then use some default text
+        // that says "Unknown price", so the TextView isn't blank.
         if (TextUtils.isEmpty(productPrice)) {
-            productPrice = context.getString(R.string.unknown_breed);
+            productPrice = context.getString(R.string.unknown_price);
         }
 
         // Update the TextViews with the attributes for the current product
-        nameTextView.setText("PRODUCT "+productName);
-        priceTextView.setText("PRICE "+productPrice + "$");
-        quantityTextView.setText("QUANTITY "+quantityPrice);
-        imageView.setImageURI(imageUri);
+        nameTextView.setText("PRODUCT " + productName);
+        priceTextView.setText("PRICE " + productPrice + "$");
+        quantityTextView.setText("QUANTITY " + mQuantity);
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mQuantity == 0) {
+                    Toast.makeText(context, "Quantity Unavailable", Toast.LENGTH_SHORT).show();
+                } else {
+                    //  catalogActivity.onBuyProduct(id,mQuantity);
+                    mQuantity--;
+                    quantityTextView.setText("QUANTITY " + mQuantity);
+                    notifyDataSetChanged ();
+                }
+            }
+        });
     }
 }

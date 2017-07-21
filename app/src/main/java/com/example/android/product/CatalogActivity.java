@@ -53,7 +53,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         Intent intent = getIntent();
         Uri currentPetUri = intent.getData();
         if (currentPetUri == null) {
-            setTitle("Add a Product");
+            setTitle(getString(R.string.add_product));
         } else {
             setTitle(getString(R.string.editor_activity_title_edit_product));
         }
@@ -78,18 +78,15 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         mCursorAdapter = new ProductCursorAdapter(this, null);
         petListView.setAdapter(mCursorAdapter);
 
-
         // Set up the item click listener
         petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 // Create new intente to go to {@link EditorActivity}
                 Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-
                 Uri currentPetUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
-
                 intent.setData(currentPetUri);
-
                 startActivity(intent);
             }
         });
@@ -107,11 +104,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME, "Nike");
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE, "10");
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, "5");
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE, getString(R.string.dummyDataPicUri));
-
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE, R.drawable.boots); // increase
+        // in your database make COLUMN_PRODUCT_
         // Insert a new row for Toto into the provider using the ContentResolver.
         // Use the {@link ProductEntry#CONTENT_URI} to indicate that we want to insert
-        // into the products database table.
         // Receive the new content URI that will allow us to access Toto's data in the future.
         Uri uri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI, values);
         Log.v("CatalogActivity", "Uri of new product: " + uri);
@@ -184,5 +180,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private void deleteAllProduct() {
         int rowsDeleted = getContentResolver().delete(ProductContract.ProductEntry.CONTENT_URI, null, null);
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+    }
+
+
+    public void onBuyProduct(long id, int quantity) {
+        Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
+        Log.v("CatalogActivity", "Uri: " + currentProductUri);
+        quantity--;
+        ContentValues values = new ContentValues();
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
     }
 }
