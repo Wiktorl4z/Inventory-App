@@ -158,6 +158,19 @@ public class ProductProvider extends ContentProvider {
             throw new IllegalArgumentException("Product requires picture");
         }
 
+        // Check customer name
+        String customerName = values.getAsString(ProductEntry.COLUMN_CUSTOMER_NAME);
+        if (customerName == null) {
+            throw new IllegalArgumentException("Product requires customer name");
+        }
+
+        // Check that the image is valid
+        String email = values.getAsString(ProductEntry.COLUMN_CUSTOMER_EMAIL);
+        if (email == null) {
+            throw new IllegalArgumentException("Product requires customer e-mail");
+        }
+
+
         // Get writable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -224,6 +237,18 @@ public class ProductProvider extends ContentProvider {
             return 0;
         }
 
+        // Check customer name
+        String customerName = values.getAsString(ProductEntry.COLUMN_CUSTOMER_NAME);
+        if (customerName == null) {
+            throw new IllegalArgumentException("Product requires customer name");
+        }
+
+        // Check that the image is valid
+        String email = values.getAsString(ProductEntry.COLUMN_CUSTOMER_EMAIL);
+        if (email == null) {
+            throw new IllegalArgumentException("Product requires customer e-mail");
+        }
+
         // Otherwise, get writable database to update the data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -252,7 +277,6 @@ public class ProductProvider extends ContentProvider {
         switch (match) {
             case PRODUCTS:
                 // Delete all rows that match the selection and selection args
-                // TODO selection & selectionArgs null?
                 rowsDeleted = database.delete(ProductContract.ProductEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case PRODUCT_ID:

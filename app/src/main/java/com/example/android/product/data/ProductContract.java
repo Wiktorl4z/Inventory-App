@@ -103,5 +103,18 @@ public final class ProductContract {
          */
         public static final String COLUMN_PRODUCT_PICTURE = "picture";
 
+        /**
+         * Name of the customer.
+         * <p>
+         * Type: String
+         */
+        public static final String COLUMN_CUSTOMER_NAME = "customer";
+
+        /**
+         * E-mail of the customer.
+         * <p>
+         * Type: String
+         */
+        public static final String COLUMN_CUSTOMER_EMAIL = "email";
     }
 }

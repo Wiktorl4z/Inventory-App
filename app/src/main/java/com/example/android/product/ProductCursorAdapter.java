@@ -21,8 +21,7 @@ import com.example.android.product.data.ProductContract;
 public class ProductCursorAdapter extends CursorAdapter {
 
     private ImageView mImageView;
-    private CatalogActivity catalogActivity;
-
+    private CatalogActivity activity;
     int mQuantity;
 
     /**
@@ -62,12 +61,14 @@ public class ProductCursorAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
+        final long id;
 
+        id = cursor.getLong(cursor.getColumnIndex(ProductContract.ProductEntry._ID));
         mImageView = (ImageView) view.findViewById(R.id.image_view_buy);
         // Find individual views that we want to modify in the list item layout
         TextView nameTextView = (TextView) view.findViewById(R.id.name);
         TextView priceTextView = (TextView) view.findViewById(R.id.text_view_price);
-       final TextView quantityTextView = (TextView) view.findViewById(R.id.text_view_quantity);
+        final TextView quantityTextView = (TextView) view.findViewById(R.id.text_view_quantity);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_list);
 
         // Find the columns of product attributes that we're interested in
@@ -96,18 +97,22 @@ public class ProductCursorAdapter extends CursorAdapter {
         // Update the TextViews with the attributes for the current product
         nameTextView.setText("PRODUCT " + productName);
         priceTextView.setText("PRICE " + productPrice + "$");
-        quantityTextView.setText("QUANTITY " + mQuantity);
+        quantityTextView.setText("QUANTITY " + quantity);
+
+        nameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.onItemClick(id);
+            }
+        });
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mQuantity == 0) {
-                    Toast.makeText(context, "Quantity Unavailable", Toast.LENGTH_SHORT).show();
+                if (mQuantity > 0) {
+                    activity.onBuyProduct(id, mQuantity);
                 } else {
-                    //  catalogActivity.onBuyProduct(id,mQuantity);
-                    mQuantity--;
-                    quantityTextView.setText("QUANTITY " + mQuantity);
-                    notifyDataSetChanged ();
+                    Toast.makeText(context, "Quantity Unavailable", Toast.LENGTH_SHORT).show();
                 }
             }
         });

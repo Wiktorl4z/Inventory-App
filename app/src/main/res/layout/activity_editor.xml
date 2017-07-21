@@ -14,7 +14,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/activity_margin"
     tools:context=".EditorActivity">
 
     <EditText
@@ -27,10 +26,10 @@
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="250dp"
-        android:background="@drawable/inster_image"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:background="@drawable/inster_image" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,13 +74,44 @@
             android:text="+" />
 
         <TextView
-            android:layout_marginTop="6dp"
             android:id="@+id/edit_text_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:hint="@string/edit_product_quantity"
             android:textSize="30dp" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/customer_name" />
+
+        <EditText
+            android:id="@+id/edit_text_customer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/customer_email" />
+
+        <EditText
+            android:id="@+id/edit_text_customer_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>
 

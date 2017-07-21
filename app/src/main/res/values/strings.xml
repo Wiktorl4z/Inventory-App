@@ -35,7 +35,7 @@
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
 
     <!-- Label for overflow menu option that deletes all product data in the app [CHAR LIMIT=20] -->
-    <string name="action_delete_all_entries">Delete All Pets</string>
+    <string name="action_delete_all_entries">Delete All Products</string>
 
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
     <string name="empty_view_title_text">It\'s a bit empty here...</string>
@@ -96,6 +96,10 @@
 
     <string name="intentType">image/*</string>
 
+    <string name="customer_name_required">Customer name required</string>
+
+    <string name="customer_email_required">Customer email required</string>
+
     <string name="selectPicture">Select Picture</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
@@ -106,5 +110,12 @@
     <string name="edit_product_quantity">Quantity</string>
 
     <string name="edit_product_price">Price</string>
+
     <string name="add_product">Add a Product</string>
+
+    <string name="customer_name">Customer Name</string>
+
+    <string name="customer_email">Customer E-mail</string>
+
+    <string name="orderMore">Order</string>
 </resources>

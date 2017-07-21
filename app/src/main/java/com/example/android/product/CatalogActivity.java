@@ -40,7 +40,7 @@ import com.example.android.product.data.ProductContract;
  */
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int PET_LOADER = 0;
+    private static final int PRODUCT_LOADER = 0;
     private ProductCursorAdapter mCursorAdapter;
     private View emptyView;
 
@@ -91,7 +91,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        getSupportLoaderManager().initLoader(PET_LOADER, null, this);
+        getSupportLoaderManager().initLoader(PRODUCT_LOADER, null, this);
     }
 
     /**
@@ -104,12 +104,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME, "Nike");
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE, "10");
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, "5");
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE, R.drawable.boots); // increase
-        // in your database make COLUMN_PRODUCT_
-        // Insert a new row for Toto into the provider using the ContentResolver.
-        // Use the {@link ProductEntry#CONTENT_URI} to indicate that we want to insert
-        // Receive the new content URI that will allow us to access Toto's data in the future.
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE, R.drawable.boots);
+        values.put(ProductContract.ProductEntry.COLUMN_CUSTOMER_NAME, "Wiktor Kalinowski");
+        values.put(ProductContract.ProductEntry.COLUMN_CUSTOMER_EMAIL, "wiktor.kalinowski@gmail.com");
+
         Uri uri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI, values);
+
         Log.v("CatalogActivity", "Uri of new product: " + uri);
     }
 
@@ -146,7 +146,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 ProductContract.ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE,
                 ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE};
+                ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE,
+                ProductContract.ProductEntry.COLUMN_CUSTOMER_NAME,
+                ProductContract.ProductEntry.COLUMN_CUSTOMER_EMAIL};
 
         // Perform a query on the provider using the ContentResolver.
         // Use the {@link ProductEntry#CONTENT_URI} to access the product data.
@@ -182,8 +184,16 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
     }
 
+    public void onItemClick(long id) {
+
+        Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+        Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
+        intent.setData(currentProductUri);
+        startActivity(intent);
+    }
 
     public void onBuyProduct(long id, int quantity) {
+
         Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
         Log.v("CatalogActivity", "Uri: " + currentProductUri);
         quantity--;

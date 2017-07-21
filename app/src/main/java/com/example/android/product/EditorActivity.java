@@ -47,9 +47,6 @@ import com.example.android.product.data.ProductContract;
 import com.example.android.product.data.ProductContract.ProductEntry;
 
 
-// TODO onRequestPermission?, on ActivityResult onOrderMore in onOptionsItemSelected
-// TODO sprawdzic saveProduct ify
-
 /**
  * Allows user to create a new product or edit an existing one.
  */
@@ -76,7 +73,9 @@ public class EditorActivity extends AppCompatActivity implements
     private int mQuantity;
     private Button mButtonPlus;
     private Button mButtonMinus;
-    Uri imageUri;
+    private EditText mCustomerName;
+    private EditText mEmailField;
+    private Uri imageUri;
 
 
     /**
@@ -130,15 +129,20 @@ public class EditorActivity extends AppCompatActivity implements
         mTextViewQuantity = (TextView) findViewById(R.id.edit_text_quantity);
         mButtonPlus = (Button) findViewById(R.id.button_plus);
         mButtonMinus = (Button) findViewById(R.id.button_minus);
+        mCustomerName = (EditText) findViewById(R.id.edit_text_customer_name);
+        mEmailField = (EditText) findViewById(R.id.edit_text_customer_email);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
         // or not, if the user tries to leave the editor without saving.
+
         mNameEditText.setOnTouchListener(mTouchListener);
         mEditPrice.setOnTouchListener(mTouchListener);
         mTextViewQuantity.setOnTouchListener(mTouchListener);
         mButtonPlus.setOnTouchListener(mTouchListener);
         mButtonMinus.setOnTouchListener(mTouchListener);
+        mCustomerName.setOnTouchListener(mTouchListener);
+        mEmailField.setOnTouchListener(mTouchListener);
         mImageView.setOnTouchListener(mTouchListener);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +174,8 @@ public class EditorActivity extends AppCompatActivity implements
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mEditPrice.getText().toString().trim();
         String quantityString = mTextViewQuantity.getText().toString().trim();
+        String customerString = mCustomerName.getText().toString().trim();
+        String emailString = mEmailField.getText().toString().trim();
 
         // Create a ContentValues object where column names are the keys,
         // and product attributes from the editor are the values.
@@ -189,11 +195,23 @@ public class EditorActivity extends AppCompatActivity implements
 
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
 
-        if (imageUri == null) {
+      /*  if (imageUri == null) {
             Toast.makeText(this, getString(R.string.product_picture_required), Toast.LENGTH_SHORT).show();
             return false;
         }
-        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());
+        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());*/
+
+        if (TextUtils.isEmpty(customerString)) {
+            Toast.makeText(this, getString(R.string.customer_name_required), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        values.put(ProductEntry.COLUMN_CUSTOMER_NAME, customerString);
+
+        if (TextUtils.isEmpty(emailString)) {
+            Toast.makeText(this, getString(R.string.customer_email_required), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        values.put(ProductEntry.COLUMN_CUSTOMER_EMAIL, emailString);
 
         // Determine if this is a new or existing product by checking if mCurrentProductUri is null or not
         if (mCurrentProductUri == null) {
@@ -257,6 +275,10 @@ public class EditorActivity extends AppCompatActivity implements
                 showDeleteConfirmationDialog();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
+            case R.id.order_more:
+                orderMore();
+                return true;
+            // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // If the product hasn't changed, continue with navigating up to parent activity
                 // which is the {@link CatalogActivity}.
@@ -284,6 +306,16 @@ public class EditorActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    private void orderMore() {
+        Intent intent = new Intent(android.content.Intent.ACTION_SENDTO);
+        intent.setType("text/plain");
+        intent.setData(Uri.parse("mailto:" + mEmailField.getText().toString().trim()));
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "New Order");
+        String message = "We need a new order of " + mNameEditText.getText().toString().trim();
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+        startActivity(intent);
+    }
+
     /**
      * This method is called when the back button is pressed.
      */
@@ -305,7 +337,6 @@ public class EditorActivity extends AppCompatActivity implements
                         finish();
                     }
                 };
-
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
     }
@@ -317,9 +348,11 @@ public class EditorActivity extends AppCompatActivity implements
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE};
+                ProductEntry.COLUMN_PRODUCT_PRICE,
+                ProductEntry.COLUMN_PRODUCT_QUANTITY,
+                ProductEntry.COLUMN_PRODUCT_PICTURE,
+                ProductEntry.COLUMN_CUSTOMER_NAME,
+                ProductEntry.COLUMN_CUSTOMER_EMAIL};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -341,16 +374,20 @@ public class EditorActivity extends AppCompatActivity implements
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
             // Find the columns of product attributes that we're interested in
-            int nameColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME);
-            int priceColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY);
-            int pictureColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE);
+            int nameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
+            int priceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
+            int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+            int pictureColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PICTURE);
+            int customerColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_CUSTOMER_NAME);
+            int emailColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_CUSTOMER_EMAIL);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
             String price = cursor.getString(priceColumnIndex);
             mQuantity = cursor.getInt(quantityColumnIndex);
             String imageUriString = cursor.getString(pictureColumnIndex);
+            String customer = cursor.getString(customerColumnIndex);
+            String email = cursor.getString(emailColumnIndex);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
@@ -358,6 +395,8 @@ public class EditorActivity extends AppCompatActivity implements
             mTextViewQuantity.setText(Integer.toString(mQuantity));
             imageUri = Uri.parse(imageUriString);
             mImageView.setImageURI(imageUri);
+            mCustomerName.setText(customer);
+            mEmailField.setText(email);
         }
     }
 
@@ -367,6 +406,8 @@ public class EditorActivity extends AppCompatActivity implements
         mNameEditText.setText("");
         mEditPrice.setText("");
         mTextViewQuantity.setText("");
+        mCustomerName.setText("");
+        mEmailField.setText("");
     }
 
     /**
