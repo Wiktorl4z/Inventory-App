@@ -46,7 +46,6 @@ import android.widget.Toast;
 import com.example.android.product.data.ProductContract;
 import com.example.android.product.data.ProductContract.ProductEntry;
 
-
 /**
  * Allows user to create a new product or edit an existing one.
  */
@@ -76,7 +75,6 @@ public class EditorActivity extends AppCompatActivity implements
     private EditText mCustomerName;
     private EditText mEmailField;
     private Uri imageUri;
-
 
     /**
      * Boolean flag that keeps track of whether the product has been edited (true) or not (false)
@@ -151,7 +149,6 @@ public class EditorActivity extends AppCompatActivity implements
                 trySelector();
             }
         });
-
     }
 
     @Override
@@ -195,11 +192,11 @@ public class EditorActivity extends AppCompatActivity implements
 
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
 
-      /*  if (imageUri == null) {
+        if (imageUri == null) {
             Toast.makeText(this, getString(R.string.product_picture_required), Toast.LENGTH_SHORT).show();
             return false;
         }
-        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());*/
+        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());
 
         if (TextUtils.isEmpty(customerString)) {
             Toast.makeText(this, getString(R.string.customer_name_required), Toast.LENGTH_SHORT).show();
@@ -433,7 +430,6 @@ public class EditorActivity extends AppCompatActivity implements
                 }
             }
         });
-
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -447,7 +443,6 @@ public class EditorActivity extends AppCompatActivity implements
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the product.
-
                 deleteProduct();
             }
         });
@@ -526,7 +521,6 @@ public class EditorActivity extends AppCompatActivity implements
             displayQuantity();
         }
     }
-
     public void displayQuantity() {
         mTextViewQuantity.setText(String.valueOf(mQuantity));
     }
