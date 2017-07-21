@@ -170,7 +170,6 @@ public class ProductProvider extends ContentProvider {
             throw new IllegalArgumentException("Product requires customer e-mail");
         }
 
-
         // Get writable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -215,10 +214,10 @@ public class ProductProvider extends ContentProvider {
      */
     private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         // Check that the name is not null
-        String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
+     /*   String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
         if (name == null) {
             throw new IllegalArgumentException("Product requires a name");
-        }
+        }*/
 
         // Check that the quantity is valid
         Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);

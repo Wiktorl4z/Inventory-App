@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import com.example.android.product.data.ProductContract;
 import com.example.android.product.data.ProductContract.ProductEntry;
+import com.squareup.picasso.Picasso;
 
 /**
  * Allows user to create a new product or edit an existing one.
@@ -192,11 +193,11 @@ public class EditorActivity extends AppCompatActivity implements
 
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
 
-        if (imageUri == null) {
+    /*    if (imageUri == null) {
             Toast.makeText(this, getString(R.string.product_picture_required), Toast.LENGTH_SHORT).show();
             return false;
         }
-        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());
+        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());*/
 
         if (TextUtils.isEmpty(customerString)) {
             Toast.makeText(this, getString(R.string.customer_name_required), Toast.LENGTH_SHORT).show();
@@ -508,6 +509,18 @@ public class EditorActivity extends AppCompatActivity implements
         startActivityForResult(Intent.createChooser(intent, getString(R.string.selectPicture)), 0);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 0) {
+                imageUri = data.getData();
+                Picasso.with(EditorActivity.this).load(data.getData()).noPlaceholder().centerCrop().fit()
+                        .into((mImageView));
+            }
+        }
+    }
+    
     public void plusButtonClicked(View view) {
         mQuantity++;
         displayQuantity();

@@ -44,7 +44,6 @@ public class ProductDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PETS_TABLE);
     }
 
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // The database is still at version 1, so there's nothing to do be done here.

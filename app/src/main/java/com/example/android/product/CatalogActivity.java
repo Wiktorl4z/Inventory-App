@@ -90,7 +90,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
-
         getSupportLoaderManager().initLoader(PRODUCT_LOADER, null, this);
     }
 
@@ -107,9 +106,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE, R.drawable.boots);
         values.put(ProductContract.ProductEntry.COLUMN_CUSTOMER_NAME, "Wiktor Kalinowski");
         values.put(ProductContract.ProductEntry.COLUMN_CUSTOMER_EMAIL, "wiktor.kalinowski@gmail.com");
-
         Uri uri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI, values);
-
         Log.v("CatalogActivity", "Uri of new product: " + uri);
     }
 
@@ -185,19 +182,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     }
 
     public void onItemClick(long id) {
-
         Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
         Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
         intent.setData(currentProductUri);
         startActivity(intent);
-    }
-
-    public void onBuyProduct(long id, int quantity) {
-
-        Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
-        Log.v("CatalogActivity", "Uri: " + currentProductUri);
-        quantity--;
-        ContentValues values = new ContentValues();
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
     }
 }

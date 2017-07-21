@@ -4,6 +4,8 @@ package com.example.android.product;
  * Created by l4z on 16.07.2017.
  */
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,6 +34,7 @@ public class ProductCursorAdapter extends CursorAdapter {
      */
     public ProductCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* flags */);
+        activity = (CatalogActivity) context;
     }
 
     /**
@@ -83,6 +86,7 @@ public class ProductCursorAdapter extends CursorAdapter {
         String quantity = cursor.getString(quantityColumnIndex);
 
         mQuantity = Integer.parseInt(quantity);
+        final Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
 
         if (!cursor.isNull(imageColumnIndex)) {
             Integer productImage = cursor.getInt(imageColumnIndex);
@@ -109,8 +113,12 @@ public class ProductCursorAdapter extends CursorAdapter {
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ContentValues values = new ContentValues();
                 if (mQuantity > 0) {
-                    activity.onBuyProduct(id, mQuantity);
+                    int newQuanity = --mQuantity;
+                    values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuanity);
+                    context.getContentResolver().update(currentProductUri, values, null, null);
+                    quantityTextView.setText("QUANTITY " + newQuanity);
                 } else {
                     Toast.makeText(context, "Quantity Unavailable", Toast.LENGTH_SHORT).show();
                 }
