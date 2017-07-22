@@ -84,14 +84,14 @@ public class ProductCursorAdapter extends CursorAdapter {
         String productName = cursor.getString(nameColumnIndex);
         String productPrice = cursor.getString(priceColumnIndex);
         String quantity = cursor.getString(quantityColumnIndex);
+        String productImage = cursor.getString(imageColumnIndex);
 
         mQuantity = Integer.parseInt(quantity);
         final Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
 
-        if (!cursor.isNull(imageColumnIndex)) {
-            Integer productImage = cursor.getInt(imageColumnIndex);
-            imageView.setImageResource(productImage);
-        }
+        Uri imageUri = Uri.parse(productImage);
+        imageView.setImageURI(imageUri);
+        imageView.invalidate();
         // If the product price is empty string or null, then use some default text
         // that says "Unknown price", so the TextView isn't blank.
         if (TextUtils.isEmpty(productPrice)) {
@@ -99,7 +99,8 @@ public class ProductCursorAdapter extends CursorAdapter {
         }
 
         // Update the TextViews with the attributes for the current product
-        nameTextView.setText("PRODUCT " + productName);
+        nameTextView.setText(productName);
+
         priceTextView.setText("PRICE " + productPrice + "$");
         quantityTextView.setText("QUANTITY " + quantity);
 

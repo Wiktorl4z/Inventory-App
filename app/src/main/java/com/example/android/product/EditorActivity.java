@@ -16,6 +16,7 @@
 package com.example.android.product;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -193,11 +194,11 @@ public class EditorActivity extends AppCompatActivity implements
 
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
 
-    /*    if (imageUri == null) {
+/*        if (imageUri == null) {
             Toast.makeText(this, getString(R.string.product_picture_required), Toast.LENGTH_SHORT).show();
             return false;
-        }
-        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());*/
+        }*/
+        values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());
 
         if (TextUtils.isEmpty(customerString)) {
             Toast.makeText(this, getString(R.string.customer_name_required), Toast.LENGTH_SHORT).show();
@@ -512,15 +513,18 @@ public class EditorActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 0) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 imageUri = data.getData();
                 Picasso.with(EditorActivity.this).load(data.getData()).noPlaceholder().centerCrop().fit()
                         .into((mImageView));
+
+                mImageView.setImageURI(imageUri);
+                mImageView.invalidate();
             }
         }
     }
-    
+
     public void plusButtonClicked(View view) {
         mQuantity++;
         displayQuantity();

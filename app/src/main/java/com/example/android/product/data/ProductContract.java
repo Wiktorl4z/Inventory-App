@@ -16,6 +16,7 @@ public final class ProductContract {
     // give it an empty constructor.
     private ProductContract() {
     }
+
     /**
      * The "Content authority" is a name for the entire content provider, similar to the
      * relationship between a domain name and its website.  A convenient string to use for the

@@ -153,10 +153,10 @@ public class ProductProvider extends ContentProvider {
         }
 
         // Check that the image is valid
-        String imageURi = values.getAsString(ProductEntry.COLUMN_PRODUCT_PICTURE);
-        if (imageURi == null) {
-            throw new IllegalArgumentException("Product requires picture");
-        }
+//        String imageURi = values.getAsString(ProductEntry.COLUMN_PRODUCT_PICTURE);
+//        if (imageURi == null) {
+//            throw new IllegalArgumentException("Product requires picture");
+//        }
 
         // Check customer name
         String customerName = values.getAsString(ProductEntry.COLUMN_CUSTOMER_NAME);
@@ -220,33 +220,33 @@ public class ProductProvider extends ContentProvider {
         }*/
 
         // Check that the quantity is valid
-        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+/*        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
         if (quantity == null) {
             throw new IllegalArgumentException("Product requires valid quantity");
-        }
+        }*/
 
-        // If the price is provided, check that it's greater than or equal to 0.
+/*        // If the price is provided, check that it's greater than or equal to 0.
         Integer price = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_PRICE);
         if (price != null && price < 0) {
             throw new IllegalArgumentException("Product requires valid price");
-        }
+        }*/
 
         // If there are no values to update, then don't try to update the database
         if (values.size() == 0) {
             return 0;
         }
 
-        // Check customer name
+/*        // Check customer name
         String customerName = values.getAsString(ProductEntry.COLUMN_CUSTOMER_NAME);
         if (customerName == null) {
             throw new IllegalArgumentException("Product requires customer name");
-        }
+        }*/
 
         // Check that the image is valid
-        String email = values.getAsString(ProductEntry.COLUMN_CUSTOMER_EMAIL);
+ /*       String email = values.getAsString(ProductEntry.COLUMN_CUSTOMER_EMAIL);
         if (email == null) {
             throw new IllegalArgumentException("Product requires customer e-mail");
-        }
+        }*/
 
         // Otherwise, get writable database to update the data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
