@@ -192,12 +192,17 @@ public class EditorActivity extends AppCompatActivity implements
         }
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, priceString);
 
+        if (TextUtils.isEmpty(quantityString)) {
+            Toast.makeText(this, getString(R.string.product_quantity_required), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
 
-/*        if (imageUri == null) {
+        if (imageUri == null) {
             Toast.makeText(this, getString(R.string.product_picture_required), Toast.LENGTH_SHORT).show();
             return false;
-        }*/
+        }
         values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, imageUri.toString());
 
         if (TextUtils.isEmpty(customerString)) {
@@ -448,15 +453,7 @@ public class EditorActivity extends AppCompatActivity implements
                 deleteProduct();
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the product.
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, null);
 
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();

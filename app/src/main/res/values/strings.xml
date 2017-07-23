@@ -94,6 +94,8 @@
 
     <string name="product_picture_required">Product picture required</string>
 
+    <string name="product_quantity_required">Product quantity required</string>
+
     <string name="intentType">image/*</string>
 
     <string name="customer_name_required">Customer name required</string>
@@ -104,9 +106,7 @@
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_product_weight">Weight</string>
-
-    <string name="dummyDataPicUri">android.resource://com.example.android.inventory/drawable/headphones</string>
-
+    
     <string name="edit_product_quantity">Quantity</string>
 
     <string name="edit_product_price">Price</string>

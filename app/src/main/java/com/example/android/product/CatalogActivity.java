@@ -15,6 +15,7 @@
  */
 package com.example.android.product;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -34,6 +35,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.product.data.ProductContract;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * Displays list of products that were entered and stored in the app.
@@ -69,21 +73,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         });
 
         // Find the ListView which will be populated with the product data
-        ListView petListView = (ListView) findViewById(R.id.list);
+        ListView productListView = (ListView) findViewById(R.id.list);
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
-        petListView.setEmptyView(emptyView);
+        productListView.setEmptyView(emptyView);
 
         mCursorAdapter = new ProductCursorAdapter(this, null);
-        petListView.setAdapter(mCursorAdapter);
+        productListView.setAdapter(mCursorAdapter);
 
         // Set up the item click listener
-        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                // Create new intente to go to {@link EditorActivity}
+                // Create new intent to go to {@link EditorActivity}
                 Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
                 Uri currentPetUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
                 intent.setData(currentPetUri);
@@ -99,11 +102,16 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private void insertProduct() {
         // Create a ContentValues object where column names are the keys,
         // and Toto's product attributes are the values.
+
+        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + getResources().getResourcePackageName(R.drawable.boots)
+                + '/' + getResources().getResourceTypeName(R.drawable.boots) + '/' + getResources().getResourceEntryName(R.drawable.boots) );
+
         ContentValues values = new ContentValues();
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME, "Nike");
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE, "10");
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, "5");
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE, R.drawable.boots);
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PICTURE, String.valueOf(imageUri));
         values.put(ProductContract.ProductEntry.COLUMN_CUSTOMER_NAME, "Wiktor Kalinowski");
         values.put(ProductContract.ProductEntry.COLUMN_CUSTOMER_EMAIL, "wiktor.kalinowski@gmail.com");
         Uri uri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI, values);
